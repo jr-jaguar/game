@@ -1,0 +1,22 @@
+services:
+    nginx:
+        image: nginx:latest
+        volumes:
+            - ./Nginx/conf.d/:/etc/nginx/conf.d
+            - ./Nginx/www/:/var/www/
+            - ./Nginx/log:/var/log/nginx/
+        ports:
+            - 8000:80
+        container_name: "${PROJECT_PREFIX}_nginx"
+        depends_on:
+          - app
+
+    app:
+        build:
+            context: .
+            dockerfile: ./PHP/Dockerfile
+        volumes:
+          - ./Nginx/www/:/var/www/
+        environment:
+            PHP_IDE_CONFIG: "serverName=${PROJECT_PREFIX}_app"
+        container_name: "${PROJECT_PREFIX}_app"
